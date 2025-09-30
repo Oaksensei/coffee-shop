@@ -11,30 +11,27 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
-const ALLOW = new Set([
-  "https://coffee-shop-4qjv5t6lm-oaksenseis-projects.vercel.app", // โดเมนที่คุณกำลังเปิดอยู่
-  // ถ้ามีโดเมนโปรดักชันหลัก ให้ใส่เพิ่มตรงนี้ด้วย เช่น:
-  // "https://coffee-shop.vercel.app",
-]);
+// 1) ตอบ OPTIONS ก่อนทุกอย่าง (กัน middleware อื่นยิงทิ้ง)
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    // ตอบ header CORS ขั้นพื้นฐานให้ browser พอใจ
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    // ถ้าใช้ cookie ค่อยเปลี่ยนเป็น true และใส่ origin ตรงโดเมน (ห้าม *)
+    // res.setHeader("Access-Control-Allow-Credentials", "true");
+    return res.sendStatus(204);
+  }
+  next();
+});
 
-app.set("trust proxy", 1);
-
+// 2) เปิด CORS แบบกว้างเพื่อทดสอบ (ผ่านให้ชัวร์ก่อน)
 app.use(cors({
-  origin(origin, cb) {
-    if (!origin) return cb(null, true);                // อนุญาตเครื่องมือ/health check ที่ไม่มี origin
-    if (ALLOW.has(origin)) return cb(null, true);      // อนุญาตเฉพาะโดเมนที่กำหนด
-    // (ถ้าจะอนุญาตทุก preview ของ vercel ชั่วคราว: 
-    //   if (/\.vercel\.app$/.test(new URL(origin).hostname)) return cb(null, true);
-    // )
-    cb(new Error("Not allowed by CORS: " + origin));
-  },
+  origin: true,                // สะท้อน origin กลับไป
   methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  credentials: false           // ถ้าไม่ได้ใช้คุกกี้/เซสชัน ให้ false ไปก่อน
 }));
-
-// ให้ preflight (OPTIONS) ผ่านทุก path
-app.options("*", cors());
 
 // ✅ session – ปลอดภัยอัตโนมัติเมื่อเป็น production/HTTPS
 app.use(
