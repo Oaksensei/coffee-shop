@@ -35,7 +35,9 @@ export default function LoginPage() {
         onChange={(e) => setPassword(e.target.value)}
         placeholder="password"
       />
-      <button disabled={loading}>{loading ? "Signing in..." : "Sign in"}</button>
+      <button disabled={loading}>
+        {loading ? "Signing in..." : "Sign in"}
+      </button>
       {error && <div style={{ color: "red" }}>{error}</div>}
     </form>
   );
