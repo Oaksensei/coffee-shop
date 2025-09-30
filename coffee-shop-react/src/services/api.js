@@ -51,7 +51,7 @@ class ApiService {
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-    
+
     if (data.ok) {
       this.setToken(data.data.token);
     }

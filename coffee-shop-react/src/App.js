@@ -14,6 +14,7 @@ import InventoryReceive from "./components/InventoryReceive";
 import Suppliers from "./components/Suppliers";
 import Promotions from "./components/Promotions";
 import OrderDetail from "./components/OrderDetail";
+import LoginPage from "./components/Login";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("dashboard");
@@ -150,7 +151,7 @@ function App() {
   };
 
   if (!isLoggedIn) {
-    return <Login />;
+    return <LoginPage />;
   }
 
   return (
