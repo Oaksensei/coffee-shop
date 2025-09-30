@@ -1,49 +1,70 @@
 // backend/src/app.js
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const morgan = require("morgan");
-const session = require("express-session");
-const cookieParser = require("cookie-parser");
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import session from "express-session";
+import cookieParser from "cookie-parser";
 
-const authRouter = require("./routes/auth");
-const productsRouter = require("./routes/products");
-const inventoryRouter = require("./routes/inventory");
-const dashboardRouter = require("./routes/dashboard");
-const ordersRouter = require("./routes/orders");
-const promotionsRouter = require("./routes/promotions");
-const suppliersRouter = require("./routes/suppliers");
-const ingredientsRouter = require("./routes/ingredients");
-const stockRouter = require("./routes/stock");
+import authRouter from "./routes/auth.js";
+import productsRouter from "./routes/products.js";
+import inventoryRouter from "./routes/inventory.js";
+import dashboardRouter from "./routes/dashboard.js";
+import ordersRouter from "./routes/orders.js";
+import promotionsRouter from "./routes/promotions.js";
+import suppliersRouter from "./routes/suppliers.js";
+import ingredientsRouter from "./routes/ingredients.js";
+import stockRouter from "./routes/stock.js";
 
 const app = express();
+
+// Security headers
 app.use(helmet());
+
+// ✅ CORS: allowlist ทั้ง dev, prod (Vercel), และ Tunnel
+const allow = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  process.env.FRONTEND_ORIGIN, // เช่น https://coffee-shop.vercel.app
+  process.env.TUNNEL_ORIGIN, // เช่น https://xxxx.trycloudflare.com
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true); // allow health checks / curl
+      cb(null, allow.includes(origin));
+    },
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
-// Session middleware
+// ✅ Session middleware (ปลอดภัยขึ้นใน production)
+app.set("trust proxy", 1);
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "coffee-shop-secret-key",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false, // Set to true in production with HTTPS
+      secure: process.env.NODE_ENV === "production", // true บน HTTPS
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      maxAge: 24 * 60 * 60 * 1000, // 24h
     },
   })
 );
 
-app.get("/health", (_req, res) => res.json({ ok: true, service: "coffee-shop-backend" }));
+// ✅ Health check
+app.get("/health", (_req, res) =>
+  res.json({ ok: true, service: "coffee-shop-backend", env: process.env.NODE_ENV || "dev" })
+);
 
+// Routers
 app.use("/auth", authRouter);
 app.use("/products", productsRouter);
 app.use("/inventory", inventoryRouter);
@@ -54,4 +75,4 @@ app.use("/suppliers", suppliersRouter);
 app.use("/ingredients", ingredientsRouter);
 app.use("/stock", stockRouter);
 
-module.exports = app;
+export default app;
