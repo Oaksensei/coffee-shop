@@ -45,16 +45,12 @@ const Orders = () => {
 
   const handleViewOrder = async (orderId) => {
     try {
-      console.log("Loading order details for ID:", orderId);
       const response = await api.getOrder(orderId);
-      console.log("Order details response:", response);
 
       if (response.ok) {
         setSelectedOrder(response.data);
         setShowOrderDetail(true);
-        console.log("Order details loaded successfully");
       } else {
-        console.log("Order details response not ok:", response);
         alert(
           "Failed to load order details: " + (response.error || "Unknown error")
         );
@@ -68,17 +64,12 @@ const Orders = () => {
   const handleDeleteOrder = async (orderId) => {
     if (window.confirm("Are you sure you want to delete this order?")) {
       try {
-        console.log("Attempting to delete order with ID:", orderId);
         const response = await api.deleteOrder(orderId);
-        console.log("Delete response:", response);
 
         if (response.ok) {
-          console.log("Delete successful, reloading orders...");
           await loadOrders();
-          console.log("Orders reloaded");
           alert("Order deleted successfully");
         } else {
-          console.log("Delete failed:", response);
           alert(
             "Failed to delete order: " + (response.message || "Unknown error")
           );

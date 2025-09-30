@@ -113,7 +113,7 @@ const Dashboard = ({ setCurrentPage }) => {
         <div className="card">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <i className="fas fa-coffee text-blue-500 text-2xl"></i>
+              <i className="fas fa-coffee text-amber-500 text-2xl"></i>
             </div>
             <div className="ml-5 w-0 flex-1">
               <dl>
@@ -131,7 +131,7 @@ const Dashboard = ({ setCurrentPage }) => {
         <div className="card">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <i className="fas fa-shopping-cart text-green-500 text-2xl"></i>
+              <i className="fas fa-shopping-cart text-orange-500 text-2xl"></i>
             </div>
             <div className="ml-5 w-0 flex-1">
               <dl>
@@ -149,7 +149,7 @@ const Dashboard = ({ setCurrentPage }) => {
         <div className="card">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <i className="fas fa-dollar-sign text-yellow-500 text-2xl"></i>
+              <i className="fas fa-dollar-sign text-amber-600 text-2xl"></i>
             </div>
             <div className="ml-5 w-0 flex-1">
               <dl>
@@ -167,7 +167,7 @@ const Dashboard = ({ setCurrentPage }) => {
         <div className="card">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <i className="fas fa-box text-purple-500 text-2xl"></i>
+              <i className="fas fa-box text-amber-700 text-2xl"></i>
             </div>
             <div className="ml-5 w-0 flex-1">
               <dl>
@@ -203,7 +203,7 @@ const Dashboard = ({ setCurrentPage }) => {
         <div className="card">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <i className="fas fa-tags text-pink-500 text-2xl"></i>
+              <i className="fas fa-tags text-orange-600 text-2xl"></i>
             </div>
             <div className="ml-5 w-0 flex-1">
               <dl>
@@ -326,42 +326,42 @@ const Dashboard = ({ setCurrentPage }) => {
         <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
           <button
             onClick={() => setCurrentPage("pos")}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
+            className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
           >
             <i className="fas fa-cash-register text-2xl mb-2 block"></i>
             <div className="font-medium">New Sale</div>
           </button>
           <button
             onClick={() => setCurrentPage("products")}
-            className="bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
+            className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
           >
             <i className="fas fa-plus text-2xl mb-2 block"></i>
             <div className="font-medium">Add Product</div>
           </button>
           <button
             onClick={() => setCurrentPage("inventory")}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
+            className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
           >
             <i className="fas fa-edit text-2xl mb-2 block"></i>
             <div className="font-medium">Adjust Stock</div>
           </button>
           <button
             onClick={() => setCurrentPage("orders")}
-            className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
           >
             <i className="fas fa-list text-2xl mb-2 block"></i>
             <div className="font-medium">View Orders</div>
           </button>
           <button
             onClick={() => setCurrentPage("suppliers")}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
+            className="bg-amber-700 hover:bg-amber-800 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
           >
             <i className="fas fa-truck text-2xl mb-2 block"></i>
             <div className="font-medium">Suppliers</div>
           </button>
           <button
             onClick={() => setCurrentPage("promotions")}
-            className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
+            className="bg-orange-700 hover:bg-orange-800 text-white px-4 py-3 rounded-lg text-center transition-colors duration-200"
           >
             <i className="fas fa-tags text-2xl mb-2 block"></i>
             <div className="font-medium">Promotions</div>

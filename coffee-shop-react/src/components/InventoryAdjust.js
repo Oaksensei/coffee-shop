@@ -31,8 +31,6 @@ const InventoryAdjust = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("Submitting adjustment:", formData);
-
       // Convert quantity to amount for backend
       const adjustmentData = {
         item_id: formData.item_id,
@@ -41,9 +39,7 @@ const InventoryAdjust = () => {
         reason: formData.reason,
       };
 
-      console.log("Sending adjustment data:", adjustmentData);
       const response = await api.adjustInventory(adjustmentData);
-      console.log("Adjustment response:", response);
 
       if (response.ok) {
         alert("Stock adjusted successfully!");

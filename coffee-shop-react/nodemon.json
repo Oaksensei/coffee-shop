@@ -1,9 +1,0 @@
-{
-  "watch": ["src"],
-  "ext": "js,jsx,css,json",
-  "ignore": ["node_modules", "build", "public"],
-  "delay": 1000,
-  "env": {
-    "NODE_ENV": "development"
-  }
-}

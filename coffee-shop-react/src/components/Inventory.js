@@ -14,23 +14,8 @@ const Inventory = ({ setCurrentPage }) => {
 
   const loadInventory = async () => {
     try {
-      console.log("Loading inventory...");
       const response = await api.getInventory();
-      console.log("Inventory response:", response);
       if (response.ok) {
-        console.log("Setting inventory data:", response.data);
-        // Debug: log each item to check status
-        response.data.forEach((item, index) => {
-          console.log(`Item ${index}:`, {
-            name: item.name,
-            stock_qty: item.stock_qty,
-            min_stock: item.min_stock,
-            status: item.status,
-            calculation: `${item.stock_qty} <= ${item.min_stock} = ${
-              item.stock_qty <= item.min_stock
-            }`,
-          });
-        });
         setInventory(response.data);
       }
       setLoading(false);
@@ -42,11 +27,8 @@ const Inventory = ({ setCurrentPage }) => {
 
   const loadSuppliers = async () => {
     try {
-      console.log("Loading suppliers...");
       const response = await api.getSuppliers();
-      console.log("Suppliers response:", response);
       if (response.ok) {
-        console.log("Setting suppliers data:", response.data);
         setSuppliers(response.data);
       }
     } catch (error) {
@@ -73,18 +55,12 @@ const Inventory = ({ setCurrentPage }) => {
       window.confirm("Are you sure you want to delete this inventory item?")
     ) {
       try {
-        console.log("Attempting to delete item with ID:", id);
         const response = await api.deleteInventoryItem(id);
-        console.log("Delete response:", response);
 
         if (response.ok) {
-          console.log("Delete successful, reloading inventory...");
-          // Reload inventory data from server instead of just filtering
           await loadInventory();
-          console.log("Inventory reloaded");
           alert("Inventory item deleted successfully");
         } else {
-          console.log("Delete failed:", response);
           alert(
             "Failed to delete inventory item: " +
               (response.message || "Unknown error")
@@ -213,9 +189,16 @@ const Inventory = ({ setCurrentPage }) => {
                 // Use status from backend or calculate if not available
                 const stockStatus = item.status
                   ? {
-                      status: item.status === "low" ? "Low Stock" : "Good",
+                      status:
+                        item.status === "out_of_stock"
+                          ? "Out of Stock"
+                          : item.status === "low"
+                          ? "Low Stock"
+                          : "Good",
                       class:
-                        item.status === "low"
+                        item.status === "out_of_stock"
+                          ? "status-inactive"
+                          : item.status === "low"
                           ? "status-pending"
                           : "status-active",
                     }
@@ -276,30 +259,26 @@ const Inventory = ({ setCurrentPage }) => {
       {/* Inventory Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="card text-center">
-          <div className="text-2xl font-bold text-blue-600">
+          <div className="text-2xl font-bold text-amber-600">
             {inventory.length}
           </div>
           <div className="text-sm text-gray-500">Total Items</div>
         </div>
         <div className="card text-center">
-          <div className="text-2xl font-bold text-green-600">
-            {inventory.filter((item) => item.stock_qty > item.min_stock).length}
+          <div className="text-2xl font-bold text-orange-600">
+            {inventory.filter((item) => item.status === "good").length}
           </div>
           <div className="text-sm text-gray-500">Good Stock</div>
         </div>
         <div className="card text-center">
-          <div className="text-2xl font-bold text-yellow-600">
-            {
-              inventory.filter(
-                (item) => item.stock_qty <= item.min_stock && item.stock_qty > 0
-              ).length
-            }
+          <div className="text-2xl font-bold text-amber-500">
+            {inventory.filter((item) => item.status === "low").length}
           </div>
           <div className="text-sm text-gray-500">Low Stock</div>
         </div>
         <div className="card text-center">
           <div className="text-2xl font-bold text-red-600">
-            {inventory.filter((item) => item.stock_qty <= 0).length}
+            {inventory.filter((item) => item.status === "out_of_stock").length}
           </div>
           <div className="text-sm text-gray-500">Out of Stock</div>
         </div>

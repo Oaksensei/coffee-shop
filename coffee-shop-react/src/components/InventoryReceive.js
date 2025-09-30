@@ -45,8 +45,6 @@ const InventoryReceive = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("Submitting receive data:", formData);
-
       // Convert form data to backend format
       const receiveData = {
         supplier_id: formData.supplier_id || null,
@@ -62,9 +60,7 @@ const InventoryReceive = () => {
         ],
       };
 
-      console.log("Sending receive data:", receiveData);
       const response = await api.receiveInventory(receiveData);
-      console.log("Receive response:", response);
 
       if (response.ok) {
         alert("Stock received successfully!");

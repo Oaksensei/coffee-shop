@@ -13,11 +13,8 @@ const Products = () => {
 
   const loadProducts = async () => {
     try {
-      console.log("Loading products...");
       const response = await api.getProducts();
-      console.log("Products response:", response);
       if (response.ok) {
-        console.log("Setting products data:", response.data);
         setProducts(response.data);
       }
       setLoading(false);
@@ -30,18 +27,12 @@ const Products = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        console.log("Attempting to delete product with ID:", id);
         const response = await api.deleteProduct(id);
-        console.log("Delete response:", response);
 
         if (response.ok) {
-          console.log("Delete successful, reloading products...");
-          // Reload products data from server
           await loadProducts();
-          console.log("Products reloaded");
           alert("Product deleted successfully");
         } else {
-          console.log("Delete failed:", response);
           alert(
             "Failed to delete product: " + (response.message || "Unknown error")
           );
