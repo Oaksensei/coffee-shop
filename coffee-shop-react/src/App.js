@@ -29,9 +29,8 @@ function App() {
 
     // Test API connection
     const testAPI = async () => {
-      const API = process.env.REACT_APP_API_URL;
       try {
-        const response = await fetch(`${API}/health`);
+        const response = await fetch("/api/health");
         const data = await response.json();
         console.log("API Health Check:", data);
       } catch (error) {

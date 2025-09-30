@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://coffee-shop-7r8l.onrender.com/:path*" }
+  ]
+}
