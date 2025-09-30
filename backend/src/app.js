@@ -11,15 +11,8 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
-// ✅ allowlist: dev + โปรดักชันจาก ENV + URL ของ Tunnel
-const allow = [
-  "http://localhost:3000",
-  "http://127.0.0.1:3000",
-  "https://coffee-shop-4qjv5t6lm-oaksenseis-projects.vercel.app",
-  process.env.FRONTEND_ORIGIN, // เช่น https://your-frontend.vercel.app
-  process.env.TUNNEL_ORIGIN, // เช่น https://xxxx.trycloudflare.com
-].filter(Boolean);
-
+// ✅ CORS - อนุญาตทุก origin ชั่วคราว
+app.set("trust proxy", 1);
 app.use(
   cors({
     origin: true, // อนุญาตทุก origin ชั่วคราว
@@ -28,7 +21,6 @@ app.use(
 );
 
 // ✅ session – ปลอดภัยอัตโนมัติเมื่อเป็น production/HTTPS
-app.set("trust proxy", 1);
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "change_me",
@@ -45,20 +37,6 @@ app.use(
 
 // health
 app.get("/health", (_req, res) => res.json({ ok: true, env: process.env.NODE_ENV || "dev" }));
-
-import cors from "cors";
-
-const ALLOW = ["https://coffee-shop-one-bice.vercel.app"]; // โดเมน Vercel จริงของคุณ
-app.set("trust proxy", 1);
-app.use(
-  cors({
-    origin: (origin, cb) =>
-      !origin || ALLOW.includes(origin) ? cb(null, true) : cb(new Error("CORS")),
-    credentials: true,
-  })
-);
-app.options("*", cors());
-app.use(express.json());
 
 // Routers
 import authRouter from "./routes/auth.js";
