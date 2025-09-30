@@ -22,10 +22,7 @@ const allow = [
 
 app.use(
   cors({
-    origin: (origin, cb) => {
-      if (!origin) return cb(null, true);
-      cb(null, allow.includes(origin));
-    },
+    origin: true, // อนุญาตทุก origin ชั่วคราว
     credentials: true,
   })
 );
