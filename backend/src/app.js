@@ -1,9 +1,5 @@
 import express from "express";
 import cors from "cors";
-import helmet from "helmet";
-import morgan from "morgan";
-import session from "express-session";
-import cookieParser from "cookie-parser";
 
 // Routers
 import authRouter from "./routes/auth.js";
@@ -18,10 +14,7 @@ import stockRouter from "./routes/stock.js";
 
 const app = express();
 
-// Security headers
-app.use(helmet());
-
-// CORS - อนุญาตทุก origin ชั่วคราว
+// CORS - อนุญาตทุก origin
 app.use(cors({
   origin: "*",
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -29,27 +22,13 @@ app.use(cors({
   credentials: false
 }));
 
-// Middleware
+// JSON parser
 app.use(express.json());
-app.use(morgan("dev"));
-app.use(cookieParser());
-
-// Session
-app.set("trust proxy", 1);
-app.use(session({
-  secret: process.env.SESSION_SECRET || "change_me",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
-  },
-}));
 
 // Health check
-app.get("/health", (_req, res) => res.json({ ok: true, env: process.env.NODE_ENV || "dev" }));
+app.get("/health", (_req, res) => {
+  res.json({ ok: true, env: process.env.NODE_ENV || "dev" });
+});
 
 // Routes
 app.use("/auth", authRouter);
