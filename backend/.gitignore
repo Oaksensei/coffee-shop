@@ -1,0 +1,15 @@
+# node_modules ไม่ต้องเก็บเพราะ reinstall ได้
+node_modules
+
+# ENV เก็บ password/API key ไม่ควร push ขึ้น git
+.env
+.env.*
+
+# build outputs
+dist
+.next
+
+# logs และ system files
+*.log
+.DS_Store
+coverage
