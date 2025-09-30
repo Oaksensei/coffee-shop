@@ -15,6 +15,7 @@ app.use(cookieParser());
 const allow = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
+  "https://coffee-shop-4qjv5t6lm-oaksenseis-projects.vercel.app",
   process.env.FRONTEND_ORIGIN, // เช่น https://your-frontend.vercel.app
   process.env.TUNNEL_ORIGIN, // เช่น https://xxxx.trycloudflare.com
 ].filter(Boolean);
