@@ -48,6 +48,21 @@ app.use(
 // health
 app.get("/health", (_req, res) => res.json({ ok: true, env: process.env.NODE_ENV || "dev" }));
 
+import cors from "cors";
+
+const ALLOW = ["https://coffee-shop-one-bice.vercel.app"]; // โดเมน Vercel จริงของคุณ
+app.set("trust proxy", 1);
+app.use(
+  cors({
+    origin: (origin, cb) =>
+      !origin || ALLOW.includes(origin) ? cb(null, true) : cb(new Error("CORS")),
+    credentials: true,
+  })
+);
+app.options("*", cors());
+app.use(express.json());
+
+
 // Routers
 import authRouter from "./routes/auth.js";
 import productsRouter from "./routes/products.js";

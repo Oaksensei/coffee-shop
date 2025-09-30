@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
+const API = process.env.REACT_APP_API_URL; // ตัวอย่าง: https://coffee-shop-7t8l.onrender.com
 
 class ApiService {
   constructor() {
@@ -16,7 +16,7 @@ class ApiService {
   }
 
   async request(endpoint, options = {}) {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${API}${endpoint}`;
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -43,11 +43,15 @@ class ApiService {
 
   // Auth
   async login(username, password) {
-    const data = await this.request("/auth/login", {
+    const res = await fetch(`${API}/auth/login`, {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // credentials: "include", // เปิดถ้า backend ใช้คุกกี้/เซสชัน
       body: JSON.stringify({ username, password }),
     });
-
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    
     if (data.ok) {
       this.setToken(data.data.token);
     }
