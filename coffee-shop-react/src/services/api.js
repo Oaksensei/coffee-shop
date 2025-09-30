@@ -24,7 +24,7 @@ class ApiService {
         ...(this.token && { Authorization: `Bearer ${this.token}` }),
         ...options.headers,
       },
-      credentials: "include", // เพิ่ม credentials สำหรับ CORS
+      // credentials: "include", // ไม่ใช้ credentials ชั่วคราว
       ...options,
     };
 
