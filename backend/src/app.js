@@ -11,14 +11,30 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
-// ✅ CORS - อนุญาตทุก origin ชั่วคราว
+const ALLOW = new Set([
+  "https://coffee-shop-4qjv5t6lm-oaksenseis-projects.vercel.app", // โดเมนที่คุณกำลังเปิดอยู่
+  // ถ้ามีโดเมนโปรดักชันหลัก ให้ใส่เพิ่มตรงนี้ด้วย เช่น:
+  // "https://coffee-shop.vercel.app",
+]);
+
 app.set("trust proxy", 1);
-app.use(
-  cors({
-    origin: true, // อนุญาตทุก origin ชั่วคราว
-    credentials: true,
-  })
-);
+
+app.use(cors({
+  origin(origin, cb) {
+    if (!origin) return cb(null, true);                // อนุญาตเครื่องมือ/health check ที่ไม่มี origin
+    if (ALLOW.has(origin)) return cb(null, true);      // อนุญาตเฉพาะโดเมนที่กำหนด
+    // (ถ้าจะอนุญาตทุก preview ของ vercel ชั่วคราว: 
+    //   if (/\.vercel\.app$/.test(new URL(origin).hostname)) return cb(null, true);
+    // )
+    cb(new Error("Not allowed by CORS: " + origin));
+  },
+  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
+// ให้ preflight (OPTIONS) ผ่านทุก path
+app.options("*", cors());
 
 // ✅ session – ปลอดภัยอัตโนมัติเมื่อเป็น production/HTTPS
 app.use(
