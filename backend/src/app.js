@@ -40,7 +40,7 @@ app.post("/init-db", async (_req, res) => {
     const { exec } = await import("child_process");
     const { promisify } = await import("util");
     const execAsync = promisify(exec);
-    
+
     await execAsync("npm run init-db");
     res.json({ ok: true, message: "Database initialized successfully" });
   } catch (error) {
