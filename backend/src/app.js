@@ -63,7 +63,6 @@ app.use(
 app.options("*", cors());
 app.use(express.json());
 
-
 // Routers
 import authRouter from "./routes/auth.js";
 import productsRouter from "./routes/products.js";
