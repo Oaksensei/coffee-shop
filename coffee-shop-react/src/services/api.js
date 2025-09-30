@@ -44,14 +44,10 @@ class ApiService {
 
   // Auth
   async login(username, password) {
-    const res = await fetch(`${API}/auth/login`, {
+    const data = await this.request("/auth/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      // credentials: "include", // เปิดถ้า backend ใช้คุกกี้/เซสชัน
       body: JSON.stringify({ username, password }),
     });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
     if (data.ok) {
       this.setToken(data.data.token);
