@@ -31,9 +31,7 @@ function App() {
     const testAPI = async () => {
       const API = process.env.REACT_APP_API_URL;
       try {
-        const response = await fetch(`${API}/health`, {
-          credentials: "include",
-        });
+        const response = await fetch(`${API}/health`);
         const data = await response.json();
         console.log("API Health Check:", data);
       } catch (error) {
@@ -61,7 +59,8 @@ function App() {
           setError(response.error || "Login failed");
         }
       } catch (error) {
-        setError("Login failed. Please try again.");
+        console.error("Login error:", error);
+        setError(error.message || "Login failed. Please try again.");
       }
     };
 
