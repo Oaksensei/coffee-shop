@@ -1,7 +1,7 @@
 // src/controllers/productsController.js
-const db = require("../db");
+import db from "../db.js";
 
-exports.list = async (req, res, next) => {
+export const list = async (req, res, next) => {
   try {
     const q = (req.query.q || "").trim();
     const page = Math.max(parseInt(req.query.page || "1", 10), 1);
@@ -40,7 +40,7 @@ exports.list = async (req, res, next) => {
   }
 };
 
-exports.create = async (req, res, next) => {
+export const create = async (req, res, next) => {
   try {
     const { name, category, price, status, description } = req.body;
 
@@ -66,7 +66,7 @@ exports.create = async (req, res, next) => {
   }
 };
 
-exports.get = async (req, res, next) => {
+export const get = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -83,7 +83,7 @@ exports.get = async (req, res, next) => {
   }
 };
 
-exports.update = async (req, res, next) => {
+export const update = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { name, category, price, status, description } = req.body;
@@ -104,7 +104,7 @@ exports.update = async (req, res, next) => {
   }
 };
 
-exports.delete = async (req, res, next) => {
+export const deleteProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -123,4 +123,13 @@ exports.delete = async (req, res, next) => {
     console.error("Products delete error:", e);
     res.status(500).json({ ok: false, error: "INTERNAL_ERROR" });
   }
+};
+
+// Default export with all methods
+export default {
+  list,
+  create,
+  get,
+  update,
+  delete: deleteProduct,
 };

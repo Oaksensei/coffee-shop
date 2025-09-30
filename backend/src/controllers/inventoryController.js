@@ -1,7 +1,7 @@
-const db = require("../db");
+import db from "../db.js";
 
 // GET /inventory - List all inventory items
-exports.list = async (req, res) => {
+export const list = async (req, res) => {
   try {
     const { q = "", page = 1, limit = 20 } = req.query;
     const offset = (Math.max(Number(page), 1) - 1) * Number(limit);
@@ -16,7 +16,11 @@ exports.list = async (req, res) => {
 
     const [rows] = await db.execute(
       `SELECT i.id, i.name, i.unit, i.stock_qty, i.reorder_point as min_stock, 
-              CASE WHEN i.stock_qty <= i.reorder_point THEN 'low' ELSE 'good' END as status,
+              CASE 
+                WHEN i.stock_qty <= 0 THEN 'out_of_stock'
+                WHEN i.stock_qty <= i.reorder_point THEN 'low' 
+                ELSE 'good' 
+              END as status,
               i.cost_per_unit, i.supplier_id, i.created_at, i.updated_at
        FROM ingredients i
        ${whereClause}
@@ -47,7 +51,7 @@ exports.list = async (req, res) => {
 };
 
 // POST /inventory - Create new inventory item
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     const { name, unit, stock_qty, reorder_point, cost_per_unit, supplier_id } = req.body;
 
@@ -75,7 +79,7 @@ exports.create = async (req, res) => {
 };
 
 // GET /inventory/:id - Get single inventory item
-exports.get = async (req, res) => {
+export const get = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -93,7 +97,7 @@ exports.get = async (req, res) => {
 };
 
 // PUT /inventory/:id - Update inventory item
-exports.update = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, unit, stock_qty, reorder_point, cost_per_unit, supplier_id } = req.body;
@@ -118,24 +122,19 @@ exports.update = async (req, res) => {
 };
 
 // DELETE /inventory/:id - Delete inventory item
-exports.delete = async (req, res) => {
+export const deleteItem = async (req, res) => {
   try {
     const { id } = req.params;
-
-    console.log("Delete request for inventory item ID:", id);
 
     // Check if item exists first
     const [checkRows] = await db.execute("SELECT id FROM ingredients WHERE id = ?", [id]);
 
     if (checkRows.length === 0) {
-      console.log("Item not found");
       return res.status(404).json({ ok: false, error: "INVENTORY_NOT_FOUND" });
     }
 
     // Hard delete - permanently remove from database
     const [result] = await db.execute("DELETE FROM ingredients WHERE id = ?", [id]);
-
-    console.log("Delete result:", result);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ ok: false, error: "INVENTORY_NOT_FOUND" });
@@ -149,7 +148,7 @@ exports.delete = async (req, res) => {
 };
 
 // POST /inventory/:id/adjust - Adjust stock quantity
-exports.adjustStock = async (req, res) => {
+export const adjustStock = async (req, res) => {
   try {
     const { id } = req.params;
     const { qty, reason } = req.body;
@@ -200,10 +199,8 @@ exports.adjustStock = async (req, res) => {
 };
 
 // POST /inventory/adjust - General stock adjustment
-exports.adjust = async (req, res) => {
+export const adjust = async (req, res) => {
   try {
-    console.log("Adjust request body:", req.body);
-    console.log("Adjust request headers:", req.headers);
     const {
       item_id,
       adjustment_type,
@@ -214,17 +211,6 @@ exports.adjust = async (req, res) => {
       cost_per_unit,
       supplier_id,
     } = req.body;
-
-    console.log("Parsed fields:", {
-      item_id,
-      adjustment_type,
-      amount,
-      reason,
-      notes,
-      quantity,
-      cost_per_unit,
-      supplier_id,
-    });
 
     if (!item_id) {
       return res.status(400).json({ ok: false, error: "MISSING_ITEM_ID" });
@@ -357,4 +343,15 @@ exports.adjust = async (req, res) => {
     console.error("Inventory adjust error:", e);
     res.status(500).json({ ok: false, error: "INTERNAL_ERROR" });
   }
+};
+
+// Default export with all methods
+export default {
+  list,
+  create,
+  get,
+  update,
+  delete: deleteItem,
+  adjustStock,
+  adjust,
 };

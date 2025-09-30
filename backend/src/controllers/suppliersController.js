@@ -1,7 +1,7 @@
-const db = require("../db");
+import db from "../db.js";
 
 // GET /suppliers - List all suppliers
-exports.list = async (req, res) => {
+export const list = async (req, res) => {
   try {
     const { q = "", page = 1, limit = 20 } = req.query;
     const offset = (Math.max(Number(page), 1) - 1) * Number(limit);
@@ -45,7 +45,7 @@ exports.list = async (req, res) => {
 };
 
 // POST /suppliers - Create new supplier
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     const { name, contact_name, phone, email, address, status } = req.body;
 
@@ -73,7 +73,7 @@ exports.create = async (req, res) => {
 };
 
 // GET /suppliers/:id - Get single supplier
-exports.get = async (req, res) => {
+export const get = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -91,7 +91,7 @@ exports.get = async (req, res) => {
 };
 
 // PUT /suppliers/:id - Update supplier
-exports.update = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, contact_name, phone, email, address, status } = req.body;
@@ -116,7 +116,7 @@ exports.update = async (req, res) => {
 };
 
 // PUT /suppliers/:id/status - Update supplier status
-exports.updateStatus = async (req, res) => {
+export const updateStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -138,7 +138,7 @@ exports.updateStatus = async (req, res) => {
 };
 
 // DELETE /suppliers/:id - Delete supplier
-exports.delete = async (req, res) => {
+export const deleteSupplier = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -157,4 +157,14 @@ exports.delete = async (req, res) => {
     console.error("Suppliers delete error:", e);
     res.status(500).json({ ok: false, error: "INTERNAL_ERROR" });
   }
+};
+
+// Default export with all methods
+export default {
+  list,
+  create,
+  get,
+  update,
+  updateStatus,
+  delete: deleteSupplier,
 };

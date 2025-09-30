@@ -1,7 +1,7 @@
-const db = require("../db");
+import db from "../db.js";
 
 // GET /promotions - List all promotions
-exports.list = async (req, res) => {
+export const list = async (req, res) => {
   try {
     const { q = "", page = 1, limit = 20 } = req.query;
     const offset = (Math.max(Number(page), 1) - 1) * Number(limit);
@@ -45,7 +45,7 @@ exports.list = async (req, res) => {
 };
 
 // POST /promotions - Create new promotion
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     console.log("Create promotion request body:", req.body);
     const { name, description, code, type, value, min_spend, start_at, end_at, status } = req.body;
@@ -87,7 +87,7 @@ exports.create = async (req, res) => {
 };
 
 // GET /promotions/:id - Get single promotion
-exports.get = async (req, res) => {
+export const get = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -105,7 +105,7 @@ exports.get = async (req, res) => {
 };
 
 // PUT /promotions/:id - Update promotion
-exports.update = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, description, code, type, value, min_spend, start_at, end_at, status } = req.body;
@@ -130,7 +130,7 @@ exports.update = async (req, res) => {
 };
 
 // PUT /promotions/:id/status - Update promotion status
-exports.updateStatus = async (req, res) => {
+export const updateStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -152,7 +152,7 @@ exports.updateStatus = async (req, res) => {
 };
 
 // DELETE /promotions/:id - Delete promotion
-exports.delete = async (req, res) => {
+export const deletePromotion = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -167,4 +167,14 @@ exports.delete = async (req, res) => {
     console.error("Promotions delete error:", e);
     res.status(500).json({ ok: false, error: "INTERNAL_ERROR" });
   }
+};
+
+// Default export with all methods
+export default {
+  list,
+  create,
+  get,
+  update,
+  updateStatus,
+  delete: deletePromotion,
 };

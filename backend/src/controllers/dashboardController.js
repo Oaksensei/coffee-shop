@@ -1,5 +1,5 @@
-const db = require("../db");
-const dayjs = require("dayjs");
+import db from "../db.js";
+import dayjs from "dayjs";
 
 // แปลงช่วงวันที่จาก query (?from=YYYY-MM-DD&to=YYYY-MM-DD)
 function parseRange(q = {}) {
@@ -36,7 +36,7 @@ async function summary(req, res) {
       SELECT id, name, unit, stock_qty, reorder_point
       FROM ingredients
       WHERE deleted_at IS NULL
-        AND stock_qty < reorder_point
+        AND stock_qty <= reorder_point
       ORDER BY (reorder_point - stock_qty) DESC
       LIMIT 10
       `
@@ -139,4 +139,4 @@ async function topProducts(req, res) {
   }
 }
 
-module.exports = { summary, trend, topProducts };
+export default { summary, trend, topProducts };

@@ -1,7 +1,7 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { authGuard, sessionAuth } = require("../middlewares/auth");
-const inventoryController = require("../controllers/inventoryController");
+import { authGuard, sessionAuth } from "../middlewares/auth.js";
+import inventoryController from "../controllers/inventoryController.js";
 
 // Inventory routes - temporarily disable authentication
 router.get("/", inventoryController.list);
@@ -18,4 +18,4 @@ router.post("/receive", inventoryController.adjustStock);
 // New general adjustment route
 router.post("/adjust", inventoryController.adjust);
 
-module.exports = router;
+export default router;

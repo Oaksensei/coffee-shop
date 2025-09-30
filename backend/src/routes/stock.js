@@ -1,10 +1,10 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { authGuard, sessionAuth } = require("../middlewares/auth");
-const { receiveStock, adjustStock } = require("../controllers/stockController");
+import { authGuard, sessionAuth } from "../middlewares/auth.js";
+import { receiveStock, adjustStock } from "../controllers/stockController.js";
 
 // Stock routes - temporarily disable authentication
 router.post("/receive", receiveStock);
 router.post("/adjust", adjustStock);
 
-module.exports = router;
+export default router;

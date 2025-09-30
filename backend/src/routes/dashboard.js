@@ -1,11 +1,11 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { authGuard } = require("../middlewares/auth");
-const c = require("../controllers/dashboardController");
+import { authGuard } from "../middlewares/auth.js";
+import c from "../controllers/dashboardController.js";
 
 // Dashboard routes - temporarily disable authentication
 router.get("/summary", c.summary);
 router.get("/trend", c.trend);
 router.get("/top-products", c.topProducts);
 
-module.exports = router;
+export default router;

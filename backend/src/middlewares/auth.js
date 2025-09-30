@@ -1,5 +1,5 @@
 // backend/src/middlewares/auth.js
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 // JWT-based authentication middleware (for API tokens)
 const authGuard = (req, res, next) => {
@@ -30,4 +30,4 @@ const sessionAuth = (req, res, next) => {
   }
 };
 
-module.exports = { authGuard, sessionAuth };
+export { authGuard, sessionAuth };

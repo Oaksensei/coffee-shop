@@ -1,4 +1,4 @@
-const db = require("../db");
+import db from "../db.js";
 
 // POST /orders  body: { items:[{product_id, qty, options?}], pay_method, discount_code? , note?, customer? }
 async function createOrder(req, res) {
@@ -230,4 +230,4 @@ async function deleteOrder(req, res) {
   }
 }
 
-module.exports = { createOrder, listOrders, getOrder, updateOrderStatus, deleteOrder };
+export default { createOrder, listOrders, getOrder, updateOrderStatus, deleteOrder };

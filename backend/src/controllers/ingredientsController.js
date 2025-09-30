@@ -1,6 +1,6 @@
-const db = require("../db");
+import db from "../db.js";
 
-async function createIngredient(req, res) {
+export const createIngredient = async (req, res) => {
   try {
     const { name, unit, stock_qty, reorder_point, cost_per_unit, supplier_id } = req.body;
 
@@ -25,9 +25,9 @@ async function createIngredient(req, res) {
     console.error("Error creating ingredient:", error);
     res.status(500).json({ ok: false, error: "INTERNAL_ERROR" });
   }
-}
+};
 
-async function getIngredient(req, res) {
+export const getIngredient = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -45,9 +45,9 @@ async function getIngredient(req, res) {
     console.error("Ingredients get error:", e);
     res.status(500).json({ ok: false, error: "INTERNAL_ERROR" });
   }
-}
+};
 
-async function updateIngredient(req, res) {
+export const updateIngredient = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, unit, stock_qty, reorder_point, cost_per_unit, supplier_id } = req.body;
@@ -69,9 +69,9 @@ async function updateIngredient(req, res) {
     console.error("Ingredients update error:", e);
     res.status(500).json({ ok: false, error: "INTERNAL_ERROR" });
   }
-}
+};
 
-async function deleteIngredient(req, res) {
+export const deleteIngredient = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -90,9 +90,9 @@ async function deleteIngredient(req, res) {
     console.error("Ingredients delete error:", e);
     res.status(500).json({ ok: false, error: "INTERNAL_ERROR" });
   }
-}
+};
 
-module.exports = {
+export default {
   createIngredient,
   getIngredient,
   updateIngredient,

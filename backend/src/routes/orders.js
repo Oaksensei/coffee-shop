@@ -1,7 +1,7 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { authGuard, sessionAuth } = require("../middlewares/auth");
-const c = require("../controllers/ordersController");
+import { authGuard, sessionAuth } from "../middlewares/auth.js";
+import c from "../controllers/ordersController.js";
 
 // Temporarily disable authentication for testing
 router.post("/", c.createOrder);
@@ -10,4 +10,4 @@ router.get("/:id", c.getOrder);
 router.put("/:id/status", c.updateOrderStatus);
 router.delete("/:id", c.deleteOrder);
 
-module.exports = router;
+export default router;

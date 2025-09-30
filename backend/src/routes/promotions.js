@@ -1,7 +1,7 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { authGuard, sessionAuth } = require("../middlewares/auth");
-const promotionsController = require("../controllers/promotionsController");
+import { authGuard, sessionAuth } from "../middlewares/auth.js";
+import promotionsController from "../controllers/promotionsController.js";
 
 // Promotions routes - temporarily disable authentication
 router.get("/", promotionsController.list);
@@ -11,4 +11,4 @@ router.put("/:id", promotionsController.update);
 router.put("/:id/status", promotionsController.updateStatus);
 router.delete("/:id", promotionsController.delete);
 
-module.exports = router;
+export default router;

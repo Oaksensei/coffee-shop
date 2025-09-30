@@ -1,7 +1,7 @@
-const db = require("../db");
+import db from "../db.js";
 
 // GET /ingredients?low_only=1&supplier_id=
-async function listIngredients(req, res) {
+export const listIngredients = async (req, res) => {
   try {
     const { q = "", low_only, supplier_id } = req.query;
     const params = [];
@@ -15,10 +15,10 @@ async function listIngredients(req, res) {
       params.push(Number(supplier_id));
     }
     if (String(low_only) === "1") {
-      where += " AND i.stock_qty < i.reorder_point";
+      where += " AND i.stock_qty <= i.reorder_point";
     }
 
-    const [rows] = await pool.query(
+    const [rows] = await db.execute(
       `SELECT i.id, i.name, i.unit, i.stock_qty, i.reorder_point, i.supplier_id, s.name AS supplier, i.updated_at
        FROM ingredients i
        LEFT JOIN suppliers s ON s.id = i.supplier_id
@@ -31,10 +31,10 @@ async function listIngredients(req, res) {
     console.error("listIngredients", e);
     res.status(500).json({ ok: false, error: "INTERNAL_ERROR" });
   }
-}
+};
 
 // POST /inventory/receive  {supplier_id, date, items:[{ingredient_id, qty, price_per_unit?}]}
-async function receiveStock(req, res) {
+export const receiveStock = async (req, res) => {
   const conn = await db.getConnection();
   try {
     console.log("Receive stock request body:", req.body);
@@ -82,10 +82,10 @@ async function receiveStock(req, res) {
   } finally {
     conn.release();
   }
-}
+};
 
 // POST /inventory/adjust  {reason, items:[{ingredient_id, qty}]}   // ใส่ + / - ได้
-async function adjustStock(req, res) {
+export const adjustStock = async (req, res) => {
   const conn = await db.getConnection();
   try {
     const { reason = "adjust", items = [] } = req.body;
@@ -117,6 +117,6 @@ async function adjustStock(req, res) {
   } finally {
     conn.release();
   }
-}
+};
 
-module.exports = { listIngredients, receiveStock, adjustStock };
+export default { listIngredients, receiveStock, adjustStock };

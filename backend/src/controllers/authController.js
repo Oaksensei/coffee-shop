@@ -1,6 +1,6 @@
-const bcrypt = require("bcryptjs");
-const db = require("../db");
-const { signToken } = require("../utils/jwt");
+import bcrypt from "bcryptjs";
+import db from "../db.js";
+import { signToken } from "../utils/jwt.js";
 
 // นับความพยายาม login แบบ in-memory (ง่าย ๆ)
 const attempts = new Map(); // key=username, value={ count, last }
@@ -64,4 +64,4 @@ async function me(req, res) {
   return res.json({ ok: true, data: req.user });
 }
 
-module.exports = { login, me };
+export { login, me };
