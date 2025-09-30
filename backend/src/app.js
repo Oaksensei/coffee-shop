@@ -34,6 +34,21 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true, env: process.env.NODE_ENV || "dev" });
 });
 
+// Database initialization endpoint
+app.post("/init-db", async (_req, res) => {
+  try {
+    const { exec } = await import("child_process");
+    const { promisify } = await import("util");
+    const execAsync = promisify(exec);
+    
+    await execAsync("npm run init-db");
+    res.json({ ok: true, message: "Database initialized successfully" });
+  } catch (error) {
+    console.error("Database initialization failed:", error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
 // Routes
 app.use("/auth", authRouter);
 app.use("/products", productsRouter);
