@@ -1,5 +1,4 @@
 import express from "express";
-import cors from "cors";
 
 // Routers
 import authRouter from "./routes/auth.js";
@@ -14,23 +13,17 @@ import stockRouter from "./routes/stock.js";
 
 const app = express();
 
-// CORS - อนุญาตทุก origin
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: false,
-    optionsSuccessStatus: 200, // แก้ 400 error
-  })
-);
-
-// Handle preflight requests manually
-app.options("*", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.status(200).end();
+// CORS middleware แบบง่ายที่สุด
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+  
+  next();
 });
 
 // JSON parser
